@@ -1,7 +1,7 @@
 <?php defined("SYSPATH") or die("No direct script access.")
 /**
  * Gallery - a web based photo album viewer and editor
- * Copyright (C) 2000-2009 Bharat Mediratta
+ * Copyright (C) 2000-2013 Bharat Mediratta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,12 @@
 <?/* <h2><? t("Thank you for your order (Step 3 of 3)") ?></h2> */?>
 <div class="g-block">
   <div id="b-complete">
-  <h2>Bestelling geplaatst (stap 3 van 3)</h2>
-  <?= basket::replaceStringsAll(basket::getOrderCompletePage(),$order);?>
+  <h2><?= t("Order submitted (Step 3 of 3)") ?></h2><?
+  if ($order->status == Bp_Order_Model::WAITING_PAYMENT){?>
+		<?= basket_plus::replaceStringsAll(basket_plus::getBasketVar(ORDER_COMPLETE_PAGE),$order);
+	}?><?
+  if ($order->status == Bp_Order_Model::PAYMENT_CONFIRMED){?>
+		<?= basket_plus::replaceStringsAll(basket_plus::getBasketVar(ORDER_PAID_COMPLETE_PAGE),$order);
+	}?>
   </div>
 </div>

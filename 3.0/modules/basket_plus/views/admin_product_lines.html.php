@@ -1,7 +1,7 @@
 <?php defined("SYSPATH") or die("No direct script access.")
 /**
  * Gallery - a web based photo album viewer and editor
- * Copyright (C) 2000-2009 Bharat Mediratta
+ * Copyright (C) 2000-2013 Bharat Mediratta
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,9 +42,9 @@
       <tr id="gProduct-<?= $product->id ?>" class="<?= text::alternate("gOddRow", "gEvenRow") ?>">
         <td id="product-<?= $product->id ?>" class="core-info ">
           <?= html::clean($product->name) ?></td>
-        <td><?= basket::formatMoneyForWeb($product->cost) ?></td>
+        <td><?= basket_plus::formatMoneyForWeb($product->cost) ?></td>
         <td><?= html::clean($product->description) ?></td>
-        <td><?= html::clean($product->postage_band->name) ?></td>
+        <td><?= html::clean($product->bp_postage_band->name) ?></td>
         <td class="g-actions"><a href="<?= url::site("admin/product_lines/edit_product_form/$product->id") ?>"
           open_text="<?= t("close") ?>"
           class="g-panel-link g-button ui-state-default ui-corner-all ui-icon-left">
