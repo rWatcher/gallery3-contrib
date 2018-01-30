@@ -97,6 +97,9 @@ class EXIF_GPS_Controller extends Controller {
       $counter = 0;
       $breadcrumbs[] = Breadcrumb::instance(t("Map"), url::site("exif_gps/map/album/{$type_id}"))->set_last();
       $parent_item = ORM::factory("item", $type_id);
+      if (!$parent_item->loaded()) {
+        throw new Kohana_404_Exception();
+      }
       while ($parent_item->id != 1) {
         $breadcrumbs[] = Breadcrumb::instance($parent_item->title, $parent_item->url());
         $parent_item = ORM::factory("item", $parent_item->parent_id);
