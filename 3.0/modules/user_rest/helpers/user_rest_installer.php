@@ -23,7 +23,7 @@ class user_rest_installer {
   }
 
   static function upgrade($version) {
-    if ($version == 1.0 || $version 1.1) {
+    if ($version == 1.0 || $version == 1.1) {
       module::set_version("user_rest", $version = 2);
     }
   }
