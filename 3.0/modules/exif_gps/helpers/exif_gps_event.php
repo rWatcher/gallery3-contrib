@@ -77,7 +77,7 @@ class exif_gps_event_Core {
       db::build()
         ->delete("exif_coordinates")
         ->where("item_id", "=", $item->id)
-        ->execute();	
+        ->execute();  
     } else {
       $record = ORM::factory("exif_coordinate")->where("item_id", "=", $item->id)->find();
       if (!$record->loaded()) {
@@ -99,6 +99,9 @@ class exif_gps_event_Core {
   }
 
   static function photo_menu($menu, $theme) {
+  
+  return;
+  
     // Adds album and user map icons to photo pages.
 
     // Do not display icons if the user can't view the page.
@@ -117,31 +120,40 @@ class exif_gps_event_Core {
     $user_name = $curr_user[0]->full_name;
 
     // Make sure there are actually map-able items to display.
-    $album_items_count = ORM::factory("item", $album_id)
+    if (module::get_var("exif_gps", "toolbar_map_album") == true) {
+      $album_items_count = ORM::factory("item", $album_id)
       ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
       ->viewable()
       ->order_by("exif_coordinates.latitude", "ASC")
       ->descendants_count();
-    $user_items_count = ORM::factory("item")
-      ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
-      ->where("items.owner_id", "=", $item->owner_id)
-      ->viewable()
-      ->order_by("exif_coordinates.latitude", "ASC")
-      ->count_all();
-
-    if (($album_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_album") == true)) {
-      $menu->append(Menu::factory("link")
-           ->id("exif_gps_album")
-           ->label(t("Map this album"))
-           ->url(url::site("exif_gps/map/album/" . $album_id))
-           ->css_id("g-exif-gps-album-link"));
+      
+      if ($album_items_count > 0) {
+   
+        $menu->append(Menu::factory("link")
+          ->id("exif_gps_album")
+          ->label(t("Map this album"))
+          ->url(url::site("exif_gps/map/album/" . $album_id))
+          ->css_id("g-exif-gps-album-link"));
+      }
     }
-    if (($user_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_user") == true)) {
+
+
+    if (module::get_var("exif_gps", "toolbar_map_user") == true) {
+      $user_items_count = ORM::factory("item")
+        ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
+        ->where("items.owner_id", "=", $item->owner_id)
+        ->viewable()
+        ->order_by("exif_coordinates.latitude", "ASC")
+        ->count_all();
+      
+      if ($user_items_count > 0) {
+   
       $menu->append(Menu::factory("link")
            ->id("exif_gps_user")
            ->label(t("Map ") . $user_name . t("'s photos"))
            ->url(url::site("exif_gps/map/user/" . $item->owner_id))
            ->css_id("g-exif-gps-user-link"));
+      }
     }
   }
 
@@ -164,35 +176,46 @@ class exif_gps_event_Core {
     $user_name = $curr_user[0]->full_name;
 
     // Make sure there are actually map-able items to display.
-    $album_items_count = ORM::factory("item", $album_id)
+    if (module::get_var("exif_gps", "toolbar_map_album") == true) {
+      $album_items_count = ORM::factory("item", $album_id)
       ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
       ->viewable()
       ->order_by("exif_coordinates.latitude", "ASC")
       ->descendants_count();
-    $user_items_count = ORM::factory("item")
-      ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
-      ->where("items.owner_id", "=", $item->owner_id)
-      ->viewable()
-      ->order_by("exif_coordinates.latitude", "ASC")
-      ->count_all();
-
-    if (($album_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_album") == true)) {
-      $menu->append(Menu::factory("link")
-           ->id("exif_gps_album")
-           ->label(t("Map this album"))
-           ->url(url::site("exif_gps/map/album/" . $album_id))
-           ->css_id("g-exif-gps-album-link"));
+      
+      if ($album_items_count > 0) {
+   
+        $menu->append(Menu::factory("link")
+          ->id("exif_gps_album")
+          ->label(t("Map this album"))
+          ->url(url::site("exif_gps/map/album/" . $album_id))
+          ->css_id("g-exif-gps-album-link"));
+      }
     }
-    if (($user_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_user") == true)) {
+
+
+    if (module::get_var("exif_gps", "toolbar_map_user") == true) {
+      $user_items_count = ORM::factory("item")
+        ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
+        ->where("items.owner_id", "=", $item->owner_id)
+        ->viewable()
+        ->order_by("exif_coordinates.latitude", "ASC")
+        ->count_all();
+      
+      if ($user_items_count > 0) {
+   
       $menu->append(Menu::factory("link")
            ->id("exif_gps_user")
            ->label(t("Map ") . $user_name . t("'s photos"))
            ->url(url::site("exif_gps/map/user/" . $item->owner_id))
            ->css_id("g-exif-gps-user-link"));
+      }
     }
   }
 
   static function album_menu($menu, $theme) {
+  
+  
     // Adds album and user map icons to album pages.
 
     // Do not display icons if the user can't view the page.
@@ -210,32 +233,41 @@ class exif_gps_event_Core {
     $curr_user = ORM::factory("user")->where("id", "=", $item->owner_id)->find_all();
     $user_name = $curr_user[0]->full_name;
 
-    // Make sure there are actually map-able items to display.
-    $album_items_count = ORM::factory("item", $album_id)
+
+    if (module::get_var("exif_gps", "toolbar_map_album") == true) {
+      $album_items_count = ORM::factory("item", $album_id)
       ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
       ->viewable()
       ->order_by("exif_coordinates.latitude", "ASC")
       ->descendants_count();
-    $user_items_count = ORM::factory("item")
-      ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
-      ->where("items.owner_id", "=", $item->owner_id)
-      ->viewable()
-      ->order_by("exif_coordinates.latitude", "ASC")
-      ->count_all();
-
-    if (($album_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_album") == true)) {
-      $menu->append(Menu::factory("link")
-           ->id("exif_gps_album")
-           ->label(t("Map this album"))
-           ->url(url::site("exif_gps/map/album/" . $album_id))
-           ->css_id("g-exif-gps-album-link"));
+      
+      if ($album_items_count > 0) {
+   
+        $menu->append(Menu::factory("link")
+          ->id("exif_gps_album")
+          ->label(t("Map this album"))
+          ->url(url::site("exif_gps/map/album/" . $album_id))
+          ->css_id("g-exif-gps-album-link"));
+      }
     }
-    if (($user_items_count > 0) && (module::get_var("exif_gps", "toolbar_map_user") == true)) {
+
+
+    if (module::get_var("exif_gps", "toolbar_map_user") == true) {
+      $user_items_count = ORM::factory("item")
+        ->join("exif_coordinates", "items.id", "exif_coordinates.item_id")
+        ->where("items.owner_id", "=", $item->owner_id)
+        ->viewable()
+        ->order_by("exif_coordinates.latitude", "ASC")
+        ->count_all();
+      
+      if ($user_items_count > 0) {
+   
       $menu->append(Menu::factory("link")
            ->id("exif_gps_user")
            ->label(t("Map ") . $user_name . t("'s photos"))
            ->url(url::site("exif_gps/map/user/" . $item->owner_id))
            ->css_id("g-exif-gps-user-link"));
+      }
     }
   }
 
